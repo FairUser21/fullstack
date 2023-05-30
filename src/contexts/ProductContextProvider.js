@@ -31,11 +31,15 @@ const ProductContextProvider = ({ children }) => {
 
   const getProducts = async () => {
     try {
-      const res = await axios(API_PRODUCTS);
-      console.warn(res);
+      const res = await axios(`${API_PRODUCTS}/${window.location.search}`);
       dispatch({
         type: "GET_PRODUCTS",
         payload: res.data.results,
+      });
+
+      dispatch({
+        type: "GET_TOTAL_PAGE",
+        payload: Math.ceil(res.data.count / 6),
       });
     } catch (error) {
       console.log(error);
@@ -44,6 +48,7 @@ const ProductContextProvider = ({ children }) => {
 
   let values = {
     products: state.products,
+    totalPage: state.totalPage,
     getProducts,
   };
 

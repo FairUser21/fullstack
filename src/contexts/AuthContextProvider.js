@@ -48,6 +48,7 @@ const AuthContextProvider = ({ children }) => {
       let res = await axios.post(`${API_AUTH}/login/`, user);
       console.log(res);
       localStorage.setItem("token", JSON.stringify(res.data));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -56,8 +57,14 @@ const AuthContextProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       let token = JSON.parse(localStorage.getItem("token"));
-      let res = await axios.post(`${API_AUTH}/token/refresh`, token.refresh);
-      localStorage.setItem("token", res.data);
+      let res = await axios.post(`${API_AUTH}/token/refresh/`, {
+        refresh: token.refresh,
+      });
+      console.log(res.data);
+      localStorage.setItem(
+        "token",
+        JSON.stringify({ refresh: token.refresh, access: res.data.access })
+      );
     } catch (error) {
       console.log(error);
     }

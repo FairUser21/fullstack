@@ -1,17 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useProduct } from "../contexts/ProductContextProvider";
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import ProductCard from "./ProductCard";
+import { useSearchParams } from "react-router-dom";
 
 const ProductsList = () => {
-  const { products, getProducts } = useProduct();
+  const { products, getProducts, totalPage } = useProduct();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     getProducts();
   }, []);
 
+  useEffect(() => {
+    setSearchParams({
+      page: currentPage,
+    });
+  }, [currentPage]);
+
+  useEffect(() => {
+    getProducts();
+  }, [searchParams]);
+
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -21,8 +41,16 @@ const ProductsList = () => {
         }}
       >
         {products.map((item) => (
-          <ProductCard item={item} />
+          <ProductCard key={item.id} item={item} />
         ))}
+      </Box>
+      <Box>
+        <Pagination
+          count={totalPage}
+          page={currentPage}
+          variant="outlined"
+          onChange={(e, p) => setCurrentPage(p)}
+        />
       </Box>
     </Box>
   );
