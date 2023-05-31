@@ -94,6 +94,7 @@ const ProductContextProvider = ({ children }) => {
     try {
       const config = getAuth();
       const res = await axios.delete(`${API_PRODUCTS}/${id}/`, config);
+
       getProducts();
     } catch (error) {
       console.log(error);
@@ -115,8 +116,19 @@ const ProductContextProvider = ({ children }) => {
       const res = await axios(`${API_PRODUCTS}/${id}/`);
       dispatch({
         type: "GET_ONE_PRODUCT",
-        payload: res.data.results,
+        payload: res.data,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function editProduct(product, id) {
+    try {
+      const config = getAuth();
+      const res = await axios.patch(`${API_PRODUCTS}/${id}/`, product, config);
+      getProducts();
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -133,6 +145,7 @@ const ProductContextProvider = ({ children }) => {
     deleteProduct,
     toggleLike,
     getOneProduct,
+    editProduct,
   };
 
   return (

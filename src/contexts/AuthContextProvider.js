@@ -60,7 +60,6 @@ const AuthContextProvider = ({ children }) => {
       let res = await axios.post(`${API_AUTH}/token/refresh/`, {
         refresh: token.refresh,
       });
-      console.log(res.data);
       localStorage.setItem(
         "token",
         JSON.stringify({ refresh: token.refresh, access: res.data.access })

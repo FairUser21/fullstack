@@ -10,13 +10,21 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useProduct } from "../contexts/ProductContextProvider";
+import { useParams } from "react-router-dom";
 
 const EditProduct = () => {
-  const { oneProduct, getOneProduct, category, getCategories } = useProduct();
-
+  const { oneProduct, getOneProduct, category, getCategories, editProduct } =
+    useProduct();
+  const { id } = useParams();
   const [product, setProduct] = useState(oneProduct);
 
-  console.log(product);
+  useEffect(() => {
+    getOneProduct(id);
+  }, []);
+
+  useEffect(() => {
+    setProduct(oneProduct);
+  }, [oneProduct]);
 
   const handleChange = (e) => {
     if (e.target.name === "image") {
@@ -38,9 +46,9 @@ const EditProduct = () => {
     formData.append("description", product.description);
     formData.append("price", product.price);
     formData.append("category", product.category);
-    formData.append("image", product.image);
+    // formData.append("image", product.image);
 
-    // addProduct(formData);
+    editProduct(formData, id);
   };
 
   useEffect(() => {
@@ -49,7 +57,7 @@ const EditProduct = () => {
 
   return (
     <Box sx={{ width: "40vw", m: "auto" }}>
-      <Typography>ADD PRODUCT PAGE</Typography>
+      <Typography>EDIT PRODUCT - {product.title}</Typography>
       <TextField
         sx={{ m: 1 }}
         label="Title"
