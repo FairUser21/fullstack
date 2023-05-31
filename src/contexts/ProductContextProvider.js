@@ -89,13 +89,50 @@ const ProductContextProvider = ({ children }) => {
       console.log(error);
     }
   }
+
+  async function deleteProduct(id) {
+    try {
+      const config = getAuth();
+      const res = await axios.delete(`${API_PRODUCTS}/${id}/`, config);
+      getProducts();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function toggleLike(id) {
+    try {
+      const config = getAuth();
+      const res = await axios(`${API_PRODUCTS}/${id}/toggle_like/`, config);
+      getProducts();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getOneProduct(id) {
+    try {
+      const res = await axios(`${API_PRODUCTS}/${id}/`);
+      dispatch({
+        type: "GET_ONE_PRODUCT",
+        payload: res.data.results,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   let values = {
     products: state.products,
     totalPage: state.totalPage,
     category: state.category,
+    oneProduct: state.oneProduct,
     getProducts,
     addProduct,
     getCategories,
+    deleteProduct,
+    toggleLike,
+    getOneProduct,
   };
 
   return (
